@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#FFFFFF">
+<title>Frio Estoque</title>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-192.png">
+<style>
+  html, body { height: 100%; margin: 0; background: #F5F7FB; font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif; color: #14213D; }
+  #app { position: fixed; inset: 0; width: 100%; height: 100%; border: 0; display: block; }
+  #splash { position: fixed; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 16px; background: #F5F7FB; transition: opacity .3s; }
+  #splash img { width: 88px; height: 88px; border-radius: 22px; }
+  #splash p { margin: 0; font-size: 15px; color: #5A6479; }
+  #splash.hide { opacity: 0; pointer-events: none; }
+  #offline { display: none; position: fixed; inset: 0; align-items: center; justify-content: center; padding: 24px; text-align: center; background: #F5F7FB; }
+  #offline.show { display: flex; }
+  #offline button { margin-top: 16px; min-height: 48px; padding: 0 24px; border: 0; border-radius: 12px; background: #2563EB; color: #fff; font-size: 16px; font-weight: 600; }
+</style>
+</head>
+<body>
+<iframe id="app" title="Frio Estoque" allow="clipboard-write"></iframe>
+<div id="splash" aria-hidden="true"><img src="icon-192.png" alt=""><p>Carregando estoque…</p></div>
+<div id="offline" role="alert">
+  <div>
+    <strong style="font-size:18px">Sem internet</strong>
+    <p style="margin:8px 0 0;color:#5A6479">O estoque precisa de conexão para mostrar os dados atualizados.</p>
+    <button type="button" onclick="location.reload()">Tentar de novo</button>
+  </div>
+</div>
+<script>
+  // Link do App da Web publicado no Apps Script
+  var APP_URL = 'https://script.google.com/macros/s/AKfycbxYrZtUHM-EpWWywH4ZsSrND862vynZDcQEZ6B-CoBTVOgLRSE4L09Y2wmOGRBQ_CP0OQ/exec';
+  var frame = document.getElementById('app'), splash = document.getElementById('splash');
+  if (!navigator.onLine) document.getElementById('offline').classList.add('show');
+  frame.addEventListener('load', function () { splash.classList.add('hide'); });
+  frame.src = APP_URL;
+  window.addEventListener('online', function () { location.reload(); });
+  if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js').catch(function () {});
+</script>
+</body>
+</html>
