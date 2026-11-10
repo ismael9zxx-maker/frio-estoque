@@ -1,6 +1,6 @@
 // Guarda só a casca do app (página, ícones, manifesto) para abrir rápido.
 // Os dados do estoque sempre vêm da internet, pelo Apps Script.
-var CACHE = 'frio-estoque-v1';
+var CACHE = 'frio-estoque-v2';
 var SHELL = ['./', 'index.html', 'manifest.webmanifest', 'icon-192.png', 'icon-512.png', 'icon-maskable-512.png'];
 
 self.addEventListener('install', function (e) {
