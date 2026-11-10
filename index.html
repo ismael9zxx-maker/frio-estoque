@@ -36,7 +36,8 @@
   var frame = document.getElementById('app'), splash = document.getElementById('splash');
   if (!navigator.onLine) document.getElementById('offline').classList.add('show');
   frame.addEventListener('load', function () { splash.classList.add('hide'); });
-  frame.src = APP_URL;
+  // Parâmetro de versão evita que o navegador mostre uma tela antiga guardada em cache
+  frame.src = APP_URL + '?v=' + Date.now();
   window.addEventListener('online', function () { location.reload(); });
   if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js').catch(function () {});
 </script>
