@@ -1,26 +1,8 @@
-// Guarda só a casca do app (página, ícones, manifesto) para abrir rápido.
-// Os dados vêm sempre da planilha, pelo Apps Script, e nunca ficam em cache.
-var CACHE = 'frio-estoque-v3';
-var SHELL = ['./', 'index.html', 'manifest.webmanifest', 'icon-192.png', 'icon-512.png', 'icon-maskable-512.png'];
-
-self.addEventListener('install', function (e) {
-  e.waitUntil(caches.open(CACHE).then(function (c) { return c.addAll(SHELL); }));
-  self.skipWaiting();
-});
-
+// Desativa o app antigo nos aparelhos que ainda o têm instalado.
+self.addEventListener('install', function () { self.skipWaiting(); });
 self.addEventListener('activate', function (e) {
-  e.waitUntil(caches.keys().then(function (keys) {
-    return Promise.all(keys.filter(function (k) { return k !== CACHE; }).map(function (k) { return caches.delete(k); }));
-  }).then(function () { return self.clients.claim(); }));
-});
-
-self.addEventListener('fetch', function (e) {
-  var url = new URL(e.request.url);
-  if (e.request.method !== 'GET' || url.origin !== self.location.origin) return;
-  // Rede primeiro; o cache só entra quando estiver sem internet.
-  e.respondWith(fetch(e.request).then(function (res) {
-    var copy = res.clone();
-    caches.open(CACHE).then(function (c) { c.put(e.request, copy); });
-    return res;
-  }).catch(function () { return caches.match(e.request); }));
+  e.waitUntil(caches.keys().then(function (k) { return Promise.all(k.map(function (n) { return caches.delete(n); })); })
+    .then(function () { return self.registration.unregister(); })
+    .then(function () { return self.clients.matchAll(); })
+    .then(function (cs) { cs.forEach(function (c) { c.navigate('https://ismael9zxx-maker.github.io/ar-condicionado/'); }); }));
 });
